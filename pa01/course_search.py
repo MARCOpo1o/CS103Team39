@@ -20,6 +20,7 @@ subject (filter by subject, e.g. COSI, or LALS)
 title  (filter by phrase in title)
 description (filter by phrase in description)
 timeofday (filter by day and time, e.g. meets at 11 on Wed)
+independent_study (filter by independent study courses)
 '''
 
 terms = {c['term'] for c in schedule.courses}
@@ -29,7 +30,7 @@ def topmenu():
     topmenu is the top level loop of the course search app
     '''
     global schedule
-    while True:         
+    while True:
         command = input(">> (h for help) ")
         if command=='quit':
             return
@@ -47,6 +48,13 @@ def topmenu():
         elif command in ['s','subject']:
             subject = input("enter a subject:")
             schedule = schedule.subject([subject])
+        elif command in ['title']:
+            title = input("enter a title: ")
+            schedule = schedule.title([title])
+        elif command in ['i', 'independent_study']:
+            istd = input("false for not I.S., true for yes I.S.: ")
+            schedule = schedule.independent_study([istd]).sort('subject')
+
         else:
             print('command',command,'is not supported')
             continue
@@ -59,11 +67,10 @@ def topmenu():
 
 def print_course(course):
     '''
-    print_course prints a brief description of the course 
+    print_course prints a brief description of the course
     '''
     print(course['subject'],course['coursenum'],course['section'],
           course['name'],course['term'],course['instructor'])
 
 if __name__ == '__main__':
     topmenu()
-
